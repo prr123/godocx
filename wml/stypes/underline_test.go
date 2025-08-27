@@ -10,6 +10,7 @@ func TestUnderlineFromStr_ValidValues(t *testing.T) {
 		input    string
 		expected Underline
 	}{
+		{"", UnderlineInherited},
 		{"none", UnderlineNone},
 		{"single", UnderlineSingle},
 		{"words", UnderlineWords},
@@ -19,11 +20,11 @@ func TestUnderlineFromStr_ValidValues(t *testing.T) {
 		{"dash", UnderlineDash},
 		{"dotDash", UnderlineDotDash},
 		{"dotDotDash", UnderlineDotDotDash},
-		{"wavy", UnderlineWavy},
+		{"wave", UnderlineWavy},
 		{"dottedHeavy", UnderlineDottedHeavy},
-		{"dashHeavy", UnderlineDashHeavy},
-		{"dotDashHeavy", UnderlineDotDashHeavy},
-		{"dotDotDashHeavy", UnderlineDotDotDashHeavy},
+		{"dashedHeavy", UnderlineDashHeavy},
+		{"dashDotHeavy", UnderlineDotDashHeavy},
+		{"dashDotDotHeavy", UnderlineDotDotDashHeavy},
 		{"wavyHeavy", UnderlineWavyHeavy},
 		{"dashLong", UnderlineDashLong},
 		{"wavyDouble", UnderlineWavyDouble},
@@ -64,6 +65,7 @@ func TestUnderline_UnmarshalXMLAttr_ValidValues(t *testing.T) {
 		inputXML string
 		expected Underline
 	}{
+		{`<element underline=""></element>`, UnderlineInherited},
 		{`<element underline="none"></element>`, UnderlineNone},
 		{`<element underline="single"></element>`, UnderlineSingle},
 		{`<element underline="words"></element>`, UnderlineWords},
@@ -73,11 +75,11 @@ func TestUnderline_UnmarshalXMLAttr_ValidValues(t *testing.T) {
 		{`<element underline="dash"></element>`, UnderlineDash},
 		{`<element underline="dotDash"></element>`, UnderlineDotDash},
 		{`<element underline="dotDotDash"></element>`, UnderlineDotDotDash},
-		{`<element underline="wavy"></element>`, UnderlineWavy},
+		{`<element underline="wave"></element>`, UnderlineWavy},
 		{`<element underline="dottedHeavy"></element>`, UnderlineDottedHeavy},
-		{`<element underline="dashHeavy"></element>`, UnderlineDashHeavy},
-		{`<element underline="dotDashHeavy"></element>`, UnderlineDotDashHeavy},
-		{`<element underline="dotDotDashHeavy"></element>`, UnderlineDotDotDashHeavy},
+		{`<element underline="dashedHeavy"></element>`, UnderlineDashHeavy},
+		{`<element underline="dashDotHeavy"></element>`, UnderlineDotDashHeavy},
+		{`<element underline="dashDotDotHeavy"></element>`, UnderlineDotDotDashHeavy},
 		{`<element underline="wavyHeavy"></element>`, UnderlineWavyHeavy},
 		{`<element underline="dashLong"></element>`, UnderlineDashLong},
 		{`<element underline="wavyDouble"></element>`, UnderlineWavyDouble},
