@@ -9,6 +9,7 @@ import (
 type Underline string
 
 const (
+	UnderlineInherited       Underline = ""
 	UnderlineNone            Underline = "none"
 	UnderlineSingle          Underline = "single"
 	UnderlineWords           Underline = "words"
@@ -18,11 +19,11 @@ const (
 	UnderlineDash            Underline = "dash"
 	UnderlineDotDash         Underline = "dotDash"
 	UnderlineDotDotDash      Underline = "dotDotDash"
-	UnderlineWavy            Underline = "wavy"
+	UnderlineWavy            Underline = "wave"
 	UnderlineDottedHeavy     Underline = "dottedHeavy"
-	UnderlineDashHeavy       Underline = "dashHeavy"
-	UnderlineDotDashHeavy    Underline = "dotDashHeavy"
-	UnderlineDotDotDashHeavy Underline = "dotDotDashHeavy"
+	UnderlineDashHeavy       Underline = "dashedHeavy"
+	UnderlineDotDashHeavy    Underline = "dashDotHeavy"
+	UnderlineDotDotDashHeavy Underline = "dashDotDotHeavy"
 	UnderlineWavyHeavy       Underline = "wavyHeavy"
 	UnderlineDashLong        Underline = "dashLong"
 	UnderlineWavyDouble      Underline = "wavyDouble"
@@ -31,6 +32,8 @@ const (
 
 func UnderlineFromStr(value string) (Underline, error) {
 	switch value {
+	case "":
+		return UnderlineInherited, nil
 	case "none":
 		return UnderlineNone, nil
 	case "single":
@@ -49,15 +52,15 @@ func UnderlineFromStr(value string) (Underline, error) {
 		return UnderlineDotDash, nil
 	case "dotDotDash":
 		return UnderlineDotDotDash, nil
-	case "wavy":
+	case "wave":
 		return UnderlineWavy, nil
 	case "dottedHeavy":
 		return UnderlineDottedHeavy, nil
-	case "dashHeavy":
+	case "dashedHeavy":
 		return UnderlineDashHeavy, nil
-	case "dotDashHeavy":
+	case "dashDotHeavy":
 		return UnderlineDotDashHeavy, nil
-	case "dotDotDashHeavy":
+	case "dashDotDotHeavy":
 		return UnderlineDotDotDashHeavy, nil
 	case "wavyHeavy":
 		return UnderlineWavyHeavy, nil
