@@ -25,7 +25,7 @@ type Spacing struct {
 	AfterAutospacing *stypes.OnOff `xml:"afterAutospacing,attr,omitempty"`
 
 	//Spacing Between Lines in Paragraph
-	Line *int `xml:"line,omitempty"`
+	Line *int `xml:"line,attr,omitempty"`
 
 	//Type of Spacing Between Lines
 	LineRule *stypes.LineSpacingRule `xml:"lineRule,attr,omitempty"`
