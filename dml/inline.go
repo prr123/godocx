@@ -50,8 +50,8 @@ type Inline struct {
 	Graphic Graphic `xml:"graphic,omitempty"`
 }
 
-func NewInline(extent dmlct.PSize2D, docProp DocProp, graphic Graphic) Inline {
-	return Inline{
+func NewInline(extent dmlct.PSize2D, docProp DocProp, graphic Graphic) *Inline {
+	return &Inline{
 		Extent:  extent,
 		DocProp: docProp,
 		Graphic: graphic,
