@@ -311,11 +311,10 @@ func (p *Paragraph) addDrawing(rID string, imgCount uint, width units.Inch, heig
 
 	p.ct.Children = append(p.ct.Children, ctypes.ParagraphChild{Run: run})
 
-	return &inline
+	return inline
 }
 
 func (p *Paragraph) AddPicture(path string, width units.Inch, height units.Inch) (*PicMeta, error) {
-
 	imgBytes, err := internal.FileToByte(path)
 	if err != nil {
 		return nil, err
