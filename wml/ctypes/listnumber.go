@@ -3,18 +3,20 @@ package ctypes
 import (
 
 	"encoding/xml"
-	"fmt"
+//	"fmt"
 
-    "github.com/prr123/godocx/common/constants"
-    "github.com/prr123/godocx/wml/stypes"
+//    "github.com/prr123/godocx/common/constants"
+//    "github.com/prr123/godocx/wml/stypes"
 )
 
+/*
 var defaultStyleNSAttrs = []xml.Attr{
 	{Name: xml.Name{Local: "xmlns:w"}, Value: "http://schemas.openxmlformats.org/wordprocessingml/2006/main"},
 	{Name: xml.Name{Local: "xmlns:mc"}, Value: "http://schemas.openxmlformats.org/markup-compatibility/2006"},
 	{Name: xml.Name{Local: "xmlns:w14"}, Value: "http://schemas.microsoft.com/office/word/2010/wordml"},
 	{Name: xml.Name{Local: "mc:Ignorable"}, Value: "w14"},
 }
+*/
 
 // Style Definitions
 type Lists struct {
@@ -35,11 +37,11 @@ type List struct {
 	AbstNumId int `xml:"w:abstractNumId,attr"`
 	NsId xml.Name `xml:"w:nsid"`
 	NsIdVal string `xml:"w:val,attr"`
-	ML xml.Name `xml:"w:multiLevelType"
+	ML xml.Name `xml:"w:multiLevelType"`
 	MlVal string `xml:"w:val,attr"`
-
 }
 
+/*
 func (s *Styles) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	start.Name.Local = "w:styles"
 
@@ -403,3 +405,4 @@ func (s *Style) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 	return e.EncodeToken(start.End())
 }
+*/
