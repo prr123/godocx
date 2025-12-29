@@ -3,7 +3,7 @@ module goDemo/goDocx/prr123
 go 1.25.4
 
 require (
-	github.com/prr123/godocx v0.1.6
+	github.com/prr123/godocx v0.1.7
 	github.com/stretchr/testify v1.11.1
 )
 
