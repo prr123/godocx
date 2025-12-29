@@ -10,17 +10,71 @@ import (
 	"sync"
 )
 
+type DocxList struct {
+	Ord bool
+	AbId int
+	Mark [9]string
+	Start [9]int
+}
+
 // NumInstance represents a w:num element that creates an instance of abstract numbering
 type NumInstance struct {
 	XMLName       xml.Name `xml:"w:num"`
 	NumId         int      `xml:"w:numId,attr"`
-	AbstractNumId int      `xml:"w:abstractNumId"`
+	AbstractNumId abstNum   `xml:"w:abstractNumId"`
 }
 
 // Numbering represents the numbering part of a Word document
 type Numbering struct {
 	XMLName   xml.Name       `xml:"w:numbering"`
 	Instances []*NumInstance `xml:"w:num"`
+    List []*NumList  `xml:"w:abstractNum"`
+	NMap map[int]int
+}
+
+type abstNum struct {
+    XMLName xml.Name `xml:"w:abstractNumId"`
+    Val int `xml:"val,attr"`
+}
+
+type NumList struct {
+    XMLName xml.Name `xml:"w:abstractNum"`
+    AbstNumId int `xml:"w:abstractNumId,attr"`
+    NsId nsid `xml:"nsid"`
+    ML ml `xml:"multiLevelType"`
+    Lvl []level `xml:"lvl"`
+}
+
+type nsid struct {
+    XMLName xml.Name `xml:"nsid"`
+    Val string `xml:"val,attr"`
+}
+type ml struct {
+    XMLName xml.Name `xml:"multiLevelType"`
+    Val string `xml:"val,attr"`
+}
+
+type level struct {
+    XMLName xml.Name `xml:"lvl"`
+    Ilvl string `xml:"ilvl,attr"`
+    Start start `xml:"start"`
+    NumFmt numFmt `xml:"numFmt"`
+    LvlText lvlText `xml:"lvlText"`
+}
+
+type start struct {
+    XMLName xml.Name `xml:"start"`
+    Val int `xml:"val,attr"`
+}
+
+type numFmt struct {
+    XMLName xml.Name `xml:"numFmt"`
+    Val string `xml:"val,attr"`
+}
+
+type lvlText struct {
+    XMLName xml.Name `xml:"lvlText"`
+    Val string `xml:"val,attr"`
 }
 
 // NumberingManager manages numbering instances for the document
@@ -30,6 +84,17 @@ type NumberingManager struct {
 	nextNumId int
 	rootDoc   *RootDoc
 }
+
+func (nmgr *NumberingManager) Fill(nb *Numbering, rd *RootDoc){
+	nmgr.numbering = nb
+	nmgr.nextNumId = len(nb.NMap)+1
+	nmgr.rootDoc = rd
+	return
+}
+//              nmgr.numbering = numbObj
+//              nmgr.nextNumId = len(numbObj.NMap)+1
+//              nmgr.rootDoc = root
+
 
 // NewNumberingManager creates a new numbering manager
 func NewNumberingManager(root *RootDoc) *NumberingManager {
@@ -41,6 +106,27 @@ func NewNumberingManager(root *RootDoc) *NumberingManager {
 		nextNumId: 1,
 		rootDoc:   root,
 	}
+}
+
+// NewNumberingManager creates a new numbering manager
+func GetNumberingManager(root *RootDoc, numbObj *Numbering) (nmgr *NumberingManager) {
+
+	nmgr = &NumberingManager{}
+	if numbObj != nil {
+		nmgr.numbering = numbObj
+		nmgr.nextNumId = len(numbObj.NMap)+1
+		nmgr.rootDoc = root
+		return nmgr
+	}
+	numbObj = &Numbering{
+            XMLName:   xml.Name{Local: "w:numbering", Space: "http://schemas.openxmlformats.org/wordprocessingml/2006/main"},
+            Instances: make([]*NumInstance, 0),
+			}
+
+	nmgr.numbering = numbObj
+	nmgr.nextNumId = 1
+	nmgr.rootDoc = root
+	return nmgr
 }
 
 // NewListInstance creates a new numbering instance for the given abstract numbering ID
@@ -58,7 +144,7 @@ func (nm *NumberingManager) NewListInstance(abstractNumId int) int {
 	instance := &NumInstance{
 		XMLName:       xml.Name{Local: "w:num"},
 		NumId:         numId,
-		AbstractNumId: nm.normalizeAbstract(abstractNumId),
+		AbstractNumId: abstNum{Val:nm.normalizeAbstract(abstractNumId)},
 	}
 
 	nm.numbering.Instances = append(nm.numbering.Instances, instance)
@@ -297,5 +383,73 @@ func bulletGlyphForLevel(level int) (glyph string, font string) {
 		return "■", "Wingdings" // square
 	default:
 		return "♦", "Symbol" // diamond
+	}
+}
+
+
+func (nm *NumberingManager)PrintNumObj() {
+
+	num := nm.numbering
+    fmt.Println("*** numbering ****")
+    fmt.Printf("Name: %s\n",num.XMLName.Local)
+
+
+
+    fmt.Println("*** List ****")
+
+    for il:=0; il<len(num.List); il++ {
+        nL:= num.List[il]
+
+        fmt.Printf("Name: %s Abs Num: %d\n",nL.XMLName.Local, nL.AbstNumId)
+//  fmt.Printf("Abst Num: Id: %d\n", nL.AbstNumId)
+
+        nsid := nL.NsId
+        fmt.Println("  *** nsid ****")
+        fmt.Printf("  Name: %s Value: %s\n",nsid.XMLName.Local, nsid.Val)
+//  fmt.Printf("Value: %s\n",nsid.Val)
+
+        ml := nL.ML
+        fmt.Printf("  *** multiLevel ****")
+        fmt.Printf("  Name: %s Value:%s\n",ml.XMLName.Local, ml.Val)
+//  fmt.Printf("value: %s\n", ml.Val)
+
+        fmt.Printf("  *** levels: %d ****\n", len(nL.Lvl))
+        for i:=0; i< len(nL.Lvl); i++ {
+            level := nL.Lvl[i]
+            fmt.Printf("    *** level %d ***\n", i)
+            fmt.Printf("      Name: %s Ilvl: %s\n",level.XMLName.Local, level.Ilvl)
+//      fmt.Printf("  ilevel: %s\n", level.Ilvl)
+            fmt.Printf("      start name: %s val: %d\n", level.Start.XMLName.Local, level.Start.Val)
+            fmt.Printf("      numFmt name: %s val: %s\n", level.NumFmt.XMLName.Local, level.NumFmt.Val)
+            fmt.Printf("      lvlTxt name: %s val: %v\n", level.LvlText.XMLName.Local, level.LvlText.Val)
+        }
+    }
+
+    fmt.Println("*** Num ****")
+
+	for abs, nm := range num.NMap {
+		fmt.Printf(" abs: %d numid: %d\n", abs, nm)
+	}
+
+	fmt.Println("*** end of PrintList ***")
+}
+
+func PrintDocxList(rd *RootDoc) {
+// DL *DocxLists
+	Dl:= rd.DLists
+	fmt.Printf("**** DocxLists: %d ****\n", len(Dl))
+
+	for i:=0; i< len(Dl); i++ {
+		dl := Dl[i]
+		fmt.Printf("  *** DL: %d ***\n",i+1)
+		fmt.Printf("   order: %t\n", dl.Ord)
+		fmt.Printf("   Abs Id: %d\n", dl.AbId)
+
+		for il:=0; il< 9; il++ {
+			fmt.Printf("    level: %d\n", il)
+			fmt.Printf("      mark:  %s\n", dl.Mark[il])
+			fmt.Printf("      start: %d\n", dl.Start[il])
+
+		}
 	}
 }
