@@ -1,4 +1,4 @@
-module goDemo/goDocx/prr123
+module github.com/prr123/godocx
 
 go 1.25.4
 
