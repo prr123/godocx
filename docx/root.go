@@ -1,7 +1,7 @@
 package docx
 
 import (
-
+	"fmt"
 	"encoding/xml"
 	"sync"
 
@@ -19,7 +19,7 @@ type RootDoc struct {
 	Document    *Document      // Document is the main document structure.
 	DocStyles   *ctypes.Styles // Document styles
 	Numbering   *NumberingManager // Numbering manager for list instances
-	ListNum 	*ctypes.Lists	//List types
+	DLists		[]DocxList  //List types
 	rID        int // rId is used to generate unique relationship IDs.
 	ImageCount uint
 }
@@ -65,6 +65,34 @@ func LoadStyles(fileName string, fileBytes []byte) (*ctypes.Styles, error) {
 	styles.RelativePath = fileName
 	return &styles, nil
 }
+
+// Load numbering.xml onto the numberingManager
+func LoadNumbering(fileName string, contNumbering []byte) (numObj *Numbering, err error) {
+
+//	filMap:= rdoc.FileMap
+
+//    contNumbering, ok := filMap.Load("word/numbering.xml")
+//    if !ok {return nil, fmt.Errorf("cannot load file 'word/numbering.xml'!/n")}
+
+    numObj=&Numbering{}
+
+    err = xml.Unmarshal(contNumbering, numObj)
+    if err != nil {return nil, fmt.Errorf("unmarshal: %v\n", err)}
+
+	nlen :=len(numObj.Instances)
+	nMap := make(map[int]int)
+    for inum:=0; inum<nlen; inum++ {
+        nb := numObj.Instances[inum]
+//		nMap[nb.AbstNumId.Val] = nb.NumId -1
+		nMap[nb.NumId -1] = nb.AbstractNumId.Val
+//        fmt.Printf("  Numb: %d Id: %d Abst Id: %d\n",inum, nb.NumId, nb.AbstNumId.Val)
+    }
+
+	numObj.NMap = nMap
+
+	return numObj, nil
+}
+
 
 // NewListInstance creates a new numbering instance for the given abstract numbering ID.
 // Returns the numId that can be used with paragraph.Numbering().
