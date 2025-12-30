@@ -153,9 +153,7 @@ func Unpack(content *[]byte) (*docx.RootDoc, error) {
 //			fmt.Printf("numPath: %s ok: %t\n", numPath, ok)
 			if !ok {continue}
 
-			numObj := &docs.Numbering{}
-
-			numObj, err = docx.LoadNumbering(numPath, numbFile)
+			numObj, err := docx.LoadNumbering(numPath, numbFile)
 			if err != nil {return nil, fmt.Errorf("LoadNumbering: %v",err)}
 			delete(fileIndex, numPath)
 
