@@ -19,28 +19,27 @@ type DocxList struct {
 
 // NumInstance represents a w:num element that creates an instance of abstract numbering
 type NumInstance struct {
-	XMLName       xml.Name `xml:"w:num"`
-	NumId         int      `xml:"w:numId,attr"`
-	AbstractNumId abstNum   `xml:"w:abstractNumId"`
+	XMLName       xml.Name `xml:"num"`
+	NumId         int      `xml:"numId,attr"`
+	AbstractNumId abstNum   `xml:"abstractNumId"`
 }
 
 // Numbering represents the numbering part of a Word document
 type Numbering struct {
-//	XMLName   xml.Name       `xml:"w:numbering"`
 	XMLName   xml.Name       `xml:"numbering"`
-	Instances []*NumInstance `xml:"w:num"`
-    List []*NumList  `xml:"w:abstractNum"`
+	Instances []*NumInstance `xml:"num"`
+    List []*NumList  `xml:"abstractNum"`
 	NMap map[int]int
 }
 
 type abstNum struct {
-    XMLName xml.Name `xml:"w:abstractNumId"`
+    XMLName xml.Name `xml:"abstractNumId"`
     Val int `xml:"val,attr"`
 }
 
 type NumList struct {
-    XMLName xml.Name `xml:"w:abstractNum"`
-    AbstNumId int `xml:"w:abstractNumId,attr"`
+    XMLName xml.Name `xml:"abstractNum"`
+    AbstNumId int `xml:"abstractNumId,attr"`
     NsId nsid `xml:"nsid"`
     ML ml `xml:"multiLevelType"`
     Lvl []level `xml:"lvl"`
