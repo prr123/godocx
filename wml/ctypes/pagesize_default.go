@@ -4,7 +4,7 @@ import (
 	"github.com/prr123/godocx/wml/stypes"
 )
 
-X/*
+/*
 code  |  name    |  size
 ---------------------------
 1     |  A4      |  210 × 297 mm
