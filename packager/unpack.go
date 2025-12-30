@@ -150,9 +150,9 @@ func Unpack(content *[]byte) (*docx.RootDoc, error) {
 
 			//Load Styles
 			numbFile, ok := fileIndex[numPath]
-			fmt.Printf("numPath: %s ok: %t\n", numPath, ok)
+//			fmt.Printf("numPath: %s ok: %t\n", numPath, ok)
 			numObj, err := docx.LoadNumbering(numPath, numbFile)
-			if err != nil {return nil, err}
+			if err != nil {return nil, fmt.Errorf("LoadNumbering: %v",err)}
 
 			delete(fileIndex, numPath)
 			nmgr := rd.Numbering
