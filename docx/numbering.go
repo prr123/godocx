@@ -26,7 +26,8 @@ type NumInstance struct {
 
 // Numbering represents the numbering part of a Word document
 type Numbering struct {
-	XMLName   xml.Name       `xml:"w:numbering"`
+//	XMLName   xml.Name       `xml:"w:numbering"`
+	XMLName   xml.Name       `xml:"numbering"`
 	Instances []*NumInstance `xml:"w:num"`
     List []*NumList  `xml:"w:abstractNum"`
 	NMap map[int]int
