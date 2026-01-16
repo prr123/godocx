@@ -69,15 +69,10 @@ func LoadStyles(fileName string, fileBytes []byte) (*ctypes.Styles, error) {
 // Load numbering.xml onto the numberingManager
 func LoadNumbering(fileName string, contNumbering []byte) (numObj *Numbering, err error) {
 
-//	filMap:= rdoc.FileMap
-
-//    contNumbering, ok := filMap.Load("word/numbering.xml")
-//    if !ok {return nil, fmt.Errorf("cannot load file 'word/numbering.xml'!/n")}
-
     numObj=&Numbering{}
 
     err = xml.Unmarshal(contNumbering, numObj)
-    if err != nil {return nil, fmt.Errorf("unmarshal: %v\n", err)}
+    if err != nil {return nil, fmt.Errorf("Unmarshal: %v\n", err)}
 
 	nlen :=len(numObj.Instances)
 	nMap := make(map[int]int)
