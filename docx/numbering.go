@@ -1,3 +1,7 @@
+// changes prr
+// 1. add getter for numbering field of number manager
+//
+
 package docx
 
 import (
@@ -83,6 +87,12 @@ type NumberingManager struct {
 	numbering *Numbering
 	nextNumId int
 	rootDoc   *RootDoc
+}
+
+// get numbering field
+func (nmgr *NumberingManager) GetNumbering ()(nb *Numbering){
+	nb = nmgr.numbering
+	return nb
 }
 
 func (nmgr *NumberingManager) Fill(nb *Numbering, rd *RootDoc){
